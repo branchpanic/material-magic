@@ -1,6 +1,6 @@
 package me.branchpanic.mods.materialmagic;
 
-import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -15,13 +15,17 @@ import org.apache.logging.log4j.MarkerManager;
  * Only hard-reference this class in Forge events! Consider delegating all functionality to an interface to improve
  * what little testability is possible.
  */
-@Mod("materialmagic")
+@Mod(MaterialMagicMod.ID)
 public class MaterialMagicMod {
+    public static final String ID = "materialmagic";
+
     private static final Logger LOGGER = LogManager.getLogger();
     private static final Marker MARKER = MarkerManager.getMarker("LOADING");
 
     private static boolean initialized = false;
     private static MaterialMagicMod instance = null;
+
+    private final MaterialMagicRegistrar registrar;
 
     /**
      * Constructs and assigns the running instance of Material Magic. This is only for use by Forge, but you probably
@@ -31,11 +35,15 @@ public class MaterialMagicMod {
      */
     public MaterialMagicMod() {
         if (initialized) {
-            throw new IllegalStateException("Attempted to construct a new mod instance!");
+            throw new IllegalStateException("Attempted to construct multiple running mod instances!");
         }
 
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        MinecraftForge.EVENT_BUS.register(this);
+        IEventBus modEvents = FMLJavaModLoadingContext.get().getModEventBus();
+        modEvents.addListener(this::setup);
+
+        MaterialMagicRegistrar registrar = new MaterialMagicRegistrar();
+        modEvents.register(registrar);
+        this.registrar = registrar;
 
         initialized = true;
         instance = this;
@@ -52,6 +60,10 @@ public class MaterialMagicMod {
         }
 
         return instance;
+    }
+
+    public MaterialMagicRegistrar getRegistrar() {
+        return registrar;
     }
 
     /**
