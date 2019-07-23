@@ -1,0 +1,37 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+issueTrackerURL="https://github.com/branchpanic/material-magic/issues"
+
+[[mods]]
+modId="materialmagic"
+version="${file.jarVersion}"
+displayName="Material Magic"
+displayURL="https://github.com/branchpanic/material-magic"
+
+authors="branchpanic"
+
+### TODO: Eventually fill in the following...
+
+# A URL to query for updates for this mod. See the JSON update specification <here>
+# updateJSONURL="http://myurl.me/"
+
+# A file name (in the root of the mod JAR) containing a logo for display
+# logoFile="examplemod.png" #optional
+
+description='''
+Material Magic is a magic mod based on the wonders of your world.
+'''
+
+[[dependencies.examplemod]]
+    modId="forge"
+    mandatory=true
+    versionRange="[28,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.examplemod]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.14.4]"
+    ordering="NONE"
+    side="BOTH"
