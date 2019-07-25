@@ -1,5 +1,6 @@
 package me.branchpanic.mods.materialmagic;
 
+import me.branchpanic.mods.materialmagic.capability.MaterialMagicCapabilities;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -19,8 +20,8 @@ import org.apache.logging.log4j.MarkerManager;
 public class MaterialMagicMod {
     public static final String ID = "materialmagic";
 
-    private static final Logger LOGGER = LogManager.getLogger();
-    private static final Marker MARKER = MarkerManager.getMarker("LOADING");
+    private static final Logger LOGGER = LogManager.getLogger(MaterialMagicMod.ID);
+    private static final Marker MARKER = MarkerManager.getMarker("Init");
 
     private static boolean initialized = false;
     private static MaterialMagicMod instance = null;
@@ -62,6 +63,9 @@ public class MaterialMagicMod {
         return instance;
     }
 
+    /**
+     * Gets the registrar used by Material Magic.
+     */
     public MaterialMagicRegistrar getRegistrar() {
         return registrar;
     }
@@ -70,6 +74,6 @@ public class MaterialMagicMod {
      * Performs initial setup on both sides.
      */
     private void setup(final FMLCommonSetupEvent event) {
-        LOGGER.info(MARKER, "hello!");
+        MaterialMagicCapabilities.registerAll(registrar.getAffinityRegistry());
     }
 }

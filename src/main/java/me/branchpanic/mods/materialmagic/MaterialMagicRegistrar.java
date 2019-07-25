@@ -1,12 +1,15 @@
 package me.branchpanic.mods.materialmagic;
 
 import com.google.common.collect.ImmutableList;
+import me.branchpanic.mods.materialmagic.api.magic.affinity.Affinity;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryBuilder;
 
 import java.util.Objects;
 
@@ -18,6 +21,27 @@ import java.util.Objects;
 public class MaterialMagicRegistrar {
     private static final ImmutableList<Block> BLOCKS = ImmutableList.<Block>builder()
             .build();
+
+    private static final ImmutableList<Item> ITEMS = ImmutableList.<Item>builder()
+            .build();
+
+    private IForgeRegistry<Affinity> affinityRegistry = null;
+
+    public IForgeRegistry<Affinity> getAffinityRegistry() {
+        if (affinityRegistry == null) {
+            throw new IllegalStateException("Attempted to access Affinity registry before it was created!");
+        }
+
+        return affinityRegistry;
+    }
+
+    @SubscribeEvent
+    public void onRegistriesCreated(RegistryEvent.NewRegistry event) {
+        affinityRegistry = new RegistryBuilder<Affinity>()
+                .setName(new ResourceLocation(MaterialMagicMod.ID, "affinities"))
+                .setType(Affinity.class)
+                .create();
+    }
 
     @SubscribeEvent
     public void onBlocksRegistered(RegistryEvent.Register<Block> event) {
@@ -31,6 +55,7 @@ public class MaterialMagicRegistrar {
         BLOCKS.stream()
                 .map(this::createItemForBlock)
                 .forEach(registry::register);
+        ITEMS.forEach(registry::register);
     }
 
     private Item createItemForBlock(Block block) {
